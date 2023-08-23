@@ -1,4 +1,5 @@
 ﻿using AspNetCoreApi6.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace AspNetCoreApi6.Controllers
             _dbContext = dbContext;
         }
 
+        [Authorize]
         //GET: api/Movies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
@@ -44,6 +46,7 @@ namespace AspNetCoreApi6.Controllers
             return movie;
         }
 
+        //[Authorize]
         //POST: api/Movies
         [HttpPost]
         public async Task<ActionResult<Movie>> PostMovie(Movie movie)
@@ -54,6 +57,7 @@ namespace AspNetCoreApi6.Controllers
             return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movie);
         }
 
+        //[Authorize]
         //PUT: api/Movies/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie(int id, Movie movie)
@@ -81,6 +85,7 @@ namespace AspNetCoreApi6.Controllers
             return NoContent();
         }
 
+        //[Authorize]
         //DELETE: api/Movies/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)

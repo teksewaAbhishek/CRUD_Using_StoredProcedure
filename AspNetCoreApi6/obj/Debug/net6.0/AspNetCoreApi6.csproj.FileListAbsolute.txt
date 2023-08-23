@@ -74,3 +74,4 @@ D:\dotnet_Projects\AspNetCoreApi6\AspNetCoreApi6\bin\Debug\net6.0\Telerik.Web.De
 D:\dotnet_Projects\AspNetCoreApi6\AspNetCoreApi6\bin\Debug\net6.0\Telerik.Web.Device.Detection.dll
 D:\dotnet_Projects\AspNetCoreApi6\AspNetCoreApi6\bin\Debug\net6.0\Telerik.Web.UI.Skins.dll
 D:\dotnet_Projects\AspNetCoreApi6\AspNetCoreApi6\bin\Debug\net6.0\Telerik.Web.UI.dll
+D:\dotnet_Projects\AspNetCoreApi6\AspNetCoreApi6\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

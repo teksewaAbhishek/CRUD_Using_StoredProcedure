@@ -77,3 +77,4 @@ D:\dotnet_Projects\AspNetCoreApi6\webform_UI\bin\Telerik.Web.UI.dll
 D:\dotnet_Projects\AspNetCoreApi6\webform_UI\bin\Telerik.Web.UI.Skins.dll
 D:\dotnet_Projects\AspNetCoreApi6\webform_UI\bin\EnvDTE.dll
 D:\dotnet_Projects\AspNetCoreApi6\webform_UI\bin\stdole.dll
+D:\dotnet_Projects\AspNetCoreApi6\webform_UI\obj\Debug\webform_UI.dll.licenses
