@@ -9,6 +9,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace webform_UI.Views
 {
@@ -36,6 +37,18 @@ namespace webform_UI.Views
 
             }
         }
+        protected async  void btnSearch_Click(object sender, EventArgs e)
+        {
+            string searchTerm = txtSearch.Text.Trim();
+            if (Session["GridAccessToken"] != null)
+            {
+                string token = Session["GridAccessToken"].ToString();
+                await FetchAndBindDataAsync1(token,searchTerm);
+                radGrid1.Rebind();
+            }
+
+
+        }
 
         protected async void radGrid1_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
@@ -57,6 +70,84 @@ namespace webform_UI.Views
             }
 
         }
+
+        private async Task FetchAndBindDataAsync1(string token, string searchTerm)
+        {
+            string apiUrl = "https://localhost:7018/api/Movies/Search";
+
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                    // Append the search term to the API URL
+                    apiUrl += "?searchTerm=" + HttpUtility.UrlEncode(searchTerm);
+
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonResponse = await response.Content.ReadAsStringAsync();
+                        List<ApiDataModel> data = JsonConvert.DeserializeObject<List<ApiDataModel>>(jsonResponse);
+
+                        radGrid1.DataSource = data;
+                        radGrid1.DataBind();
+                    }
+                    else if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // Handle the "no records available" scenario
+                        radGrid1.DataSource = new List<ApiDataModel>(); // Empty list to show no records
+                        radGrid1.DataBind();
+                    }
+                    else
+                    {
+                        errorMessage.Text = "API request failed: " + response.ReasonPhrase;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorMessage.Text = "Error: " + ex.Message;
+                }
+            }
+        }
+
+
+        /*private async Task FetchAndBindDataAsync1(string token, string searchTerm)
+        {
+            string apiUrl = "https://localhost:7018/api/Movies/Search";
+
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                    // Append the search term to the API URL
+                    apiUrl += "?searchTerm=" + HttpUtility.UrlEncode(searchTerm);
+
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonResponse = await response.Content.ReadAsStringAsync();
+                        List<ApiDataModel> data = JsonConvert.DeserializeObject<List<ApiDataModel>>(jsonResponse);
+
+                        radGrid1.DataSource = data;
+                        radGrid1.DataBind();
+                    }
+                    else
+                    {
+                        errorMessage.Text = "API request failed: " + response.ReasonPhrase;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorMessage.Text = "Error: " + ex.Message;
+                }
+            }
+        }*/
+
 
         private async Task FetchAndBindDataAsync(string token)
         {

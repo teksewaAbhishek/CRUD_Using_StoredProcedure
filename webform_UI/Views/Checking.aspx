@@ -38,6 +38,14 @@
     <form id="form1" runat="server">
 
         <telerik:RadScriptManager ID="RadScriptManager1" runat="server" />
+        <div>
+               <asp:TextBox ID="txtSearch" runat="server" placeholder="Enter search term"></asp:TextBox>
+
+   <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click" />
+
+        </div>
+     
+
          <asp:Button ID="btnAddMovie" runat="server" Text="Add Movie" OnClick="btnAddMovie_Click" />
         
       
@@ -72,9 +80,9 @@
 </div>
 
 <script>
-    
+
     $(document).ready(function () {
-       
+
         var currentOptionsBox = null;
 
         $("#radGrid1").on("contextmenu", "td", function (event) {
