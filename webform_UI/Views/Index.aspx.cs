@@ -27,13 +27,16 @@ namespace webform_UI.Views
 
                     // Now you have the token in the session for further use
                 }
-                ViewState["SortExpression"] = radGrid1.MasterTableView.SortExpressions.GetSortString();
-                ViewState["PageIndex"] = radGrid1.MasterTableView.CurrentPageIndex;
+                //ViewState["SortExpression"] = radGrid1.MasterTableView.SortExpressions.GetSortString();
+                //ViewState["PageIndex"] = radGrid1.MasterTableView.CurrentPageIndex;
                 await FetchAndBindDataAsync(token);
 
 
             }
         }
+
+
+     
 
         protected async void radGrid1_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
@@ -43,6 +46,27 @@ namespace webform_UI.Views
                 await FetchAndBindDataAsync(token);
                 radGrid1.Rebind();
             }
+        }
+
+       /* protected void radGrid1_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem dataItem)
+            {
+                dataItem.CssClass = "grid-row"; // Apply the class to every row
+            }
+        }*/
+
+
+        protected void btnAddMovie_Click(object sender, EventArgs e)
+        {
+            if (Session["GridAccessToken"] != null)
+            {
+                string token = Session["GridAccessToken"].ToString();
+                //Response.Redirect("AddMovie.aspx");
+                Response.Redirect($"AddMovie.aspx?token={token}");
+
+            }
+                
         }
 
         protected async void btnEdit_Click(object sender, EventArgs e)
@@ -56,19 +80,36 @@ namespace webform_UI.Views
             {
                 try
                 {
+                    if (Session["GridAccessToken"] != null)
+                    {
+                        string token = Session["GridAccessToken"].ToString();
+                        // Add the token to the request headers
+                        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+                    }
+
+                   
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
 
-                    if (response.IsSuccessStatusCode)
+                    if (Session["GridAccessToken"] != null)
                     {
-                        string jsonResponse = await response.Content.ReadAsStringAsync();
-                        ApiDataModel movie = JsonConvert.DeserializeObject<ApiDataModel>(jsonResponse);
+                        string token = Session["GridAccessToken"].ToString();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jsonResponse = await response.Content.ReadAsStringAsync();
+                            ApiDataModel movie = JsonConvert.DeserializeObject<ApiDataModel>(jsonResponse);
 
-                        Response.Redirect("EditMovie.aspx?movieId=" + id);
+                           // Response.Redirect("EditMovie.aspx?movieId=" + id);
+                            Response.Redirect($"EditMovie.aspx?movieId={id}&token={token}");
+                        }
+                        else
+                        {
+                            errorMessage.Text = "API request failed: " + response.ReasonPhrase;
+                        }
+
                     }
-                    else
-                    {
-                        errorMessage.Text = "API request failed: " + response.ReasonPhrase;
-                    }
+
+                   
                 }
                 catch (Exception ex)
                 {
@@ -88,6 +129,13 @@ namespace webform_UI.Views
             {
                 try
                 {
+                    if (Session["GridAccessToken"] != null)
+                    {
+                        string token = Session["GridAccessToken"].ToString();
+                        // Add the token to the request headers
+                        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+                    }
                     HttpResponseMessage response = await client.DeleteAsync(apiUrl);
 
                     if (response.IsSuccessStatusCode)

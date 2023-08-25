@@ -8,6 +8,7 @@ namespace AspNetCoreApi6.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private readonly MovieContext _dbContext;
@@ -17,7 +18,7 @@ namespace AspNetCoreApi6.Controllers
             _dbContext = dbContext;
         }
 
-        [Authorize]
+       
         //GET: api/Movies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()

@@ -16,14 +16,15 @@ namespace webform_UI.Views
                 if (!string.IsNullOrEmpty(Request.QueryString["movieId"]))
                 {
                     string movieId = Request.QueryString["movieId"];
-                    await PopulateMovieDetailsAsync(movieId);
+                    string token = Request.QueryString["token"];
+                    await PopulateMovieDetailsAsync(movieId,token);
                 }
             }
         }
 
-        private async Task PopulateMovieDetailsAsync(string movieId)
+        private async Task PopulateMovieDetailsAsync(string movieId,string token)
         {
-            ApiDataModel movie = await FetchMovieDetailsAsync(movieId);
+            ApiDataModel movie = await FetchMovieDetailsAsync(movieId,token);
             if (movie != null)
             {
                 txtTitle.Text = movie.Title;
@@ -32,7 +33,7 @@ namespace webform_UI.Views
             }
         }
 
-        private async Task<ApiDataModel> FetchMovieDetailsAsync(string movieId)
+        private async Task<ApiDataModel> FetchMovieDetailsAsync(string movieId, string token)
         {
             string apiUrl = $"https://localhost:7018/api/Movies/{movieId}";
 
@@ -40,6 +41,7 @@ namespace webform_UI.Views
             {
                 try
                 {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
 
                     if (response.IsSuccessStatusCode)
@@ -65,6 +67,7 @@ namespace webform_UI.Views
         protected async void btnSave_Click(object sender, EventArgs e)
         {
             string movieId = Request.QueryString["movieId"];
+            string token = Request.QueryString["token"];
             ApiDataModel updatedMovie = new ApiDataModel
             {
                 Id = int.Parse(movieId),
@@ -79,6 +82,8 @@ namespace webform_UI.Views
             {
                 try
                 {
+                    // Add the token to the request headers
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
                     string jsonPayload = JsonConvert.SerializeObject(updatedMovie);
                     HttpContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
@@ -87,7 +92,9 @@ namespace webform_UI.Views
                     if (response.IsSuccessStatusCode)
                     {
                         // Redirect to Index.aspx after successful update
-                        Response.Redirect("Index.aspx");
+                        //Response.Redirect("Index.aspx");
+                        //Response.Redirect($"Index.aspx?token={token}");
+                        Response.Redirect($"Checking.aspx?token={token}");
                     }
                     else
                     {

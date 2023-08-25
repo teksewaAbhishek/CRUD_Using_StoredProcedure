@@ -15,10 +15,18 @@ namespace webform_UI.Views
         {
 
         }
+
+        protected  void btnRegister_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("RegisterUsers.aspx");
+
+        }
         protected async void Button_Click(object sender, EventArgs e)
         {
             // API endpoint URL
-            string apiURL = "https://localhost:7018/api/Login";
+            // string apiURL = "https://localhost:7018/api/Login";
+
+            string apiURL = "https://localhost:7018/api/Auth/Login";
             // Get values from textboxes
             string username = txtUsername.Value;
             string password = txtPassword.Value;
@@ -53,10 +61,13 @@ namespace webform_UI.Views
 
                     if (response.IsSuccessStatusCode)
                     {
+
+
+                        //TokenResponse responseData = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
                         
-                        
-                        TokenResponse responseData = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
-                        string token = responseData.Token;
+                        string unprocessedtoken = responseContent;
+
+                        string token = unprocessedtoken.Trim('"');
                         // Display the token on the label
                         // tokenLabel.Text = "Token: " + token;
 
@@ -64,7 +75,9 @@ namespace webform_UI.Views
                         Session["AccessToken"] = token;
 
                         // Redirect to the Index page with the token as a query parameter
-                        Response.Redirect($"Index.aspx?token={token}");
+                        //Response.Redirect($"Index.aspx?token={token}");
+
+                        Response.Redirect($"Checking.aspx?token={token}");
                     }
                     else
                     {

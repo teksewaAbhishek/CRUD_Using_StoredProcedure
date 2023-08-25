@@ -10,13 +10,15 @@ namespace webform_UI.Views
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            string token = Request.QueryString["token"];
         }
 
         protected async void btnAdd_Click(object sender, EventArgs e)
         {
             string apiUrl = "https://localhost:7018/api/Movies";
+            string token = Request.QueryString["token"];
 
-           
+
             ApiDataModel newMovie = new ApiDataModel
             {
                 Title = txtTitle.Text,
@@ -28,6 +30,7 @@ namespace webform_UI.Views
             {
                 try
                 {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
                     string jsonContent = JsonConvert.SerializeObject(newMovie);
                     var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
@@ -35,8 +38,10 @@ namespace webform_UI.Views
 
                     if (response.IsSuccessStatusCode)
                     {
-                        
-                        Response.Redirect("Index.aspx");
+
+                        //Response.Redirect("Index.aspx");
+                        //Response.Redirect($"Index.aspx?token={token}");
+                        Response.Redirect($"Checking.aspx?token={token}");
                     }
                     else
                     {

@@ -15,7 +15,8 @@
             <asp:TextBox ID="txtGenre" runat="server" />
 
             <label for="txtReleaseDate">Release Date:</label>
-            <asp:TextBox ID="txtReleaseDate" runat="server" />
+            <asp:TextBox ID="txtReleaseDate" runat="server" placeholder="MM-DD-YYYY" />
+
 
 
             <asp:Button ID="btnAdd" runat="server" Text="Add" OnClick="btnAdd_Click" />
