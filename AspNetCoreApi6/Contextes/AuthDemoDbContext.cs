@@ -8,7 +8,7 @@ namespace AspNetCoreApi6.Contextes
 
     public class AuthDemoDbContext : IdentityDbContext
     {
-        public AuthDemoDbContext(DbContextOptions options):base(options)
+        public AuthDemoDbContext(DbContextOptions<AuthDemoDbContext> options) : base(options)
         {
 
         }
